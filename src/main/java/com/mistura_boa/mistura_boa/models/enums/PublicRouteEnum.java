@@ -1,3 +1,4 @@
+
 package com.mistura_boa.mistura_boa.models.enums;
 
 import java.util.Arrays;
@@ -10,12 +11,9 @@ public enum PublicRouteEnum {
     LOGIN("/auth/login", "POST"),
     RESET_SENHA("/auth/reset-password", "POST"),
     NOVO_USUARIO("/auth/new-user", "POST"),
-    GET_ALL_PRODUTO("/produto/", "GET"),
     GET_PRODUTO_BY_ID("/produto/{id}", "GET"),
-    GET_ALL_CATEGORIA("/categoria/", "GET"),
-    SEARCH_PRODUTO("/produto/search", "POST"),
-    FIND_PRODUTO_BY_CATEGORIA("/produto/produto-by-categoria/{idCategoria}", "GET"),
-    SEARCH_CATEGORIA("/categoria/search", "POST");
+    SEARCH_PRODUTO_ACTIVE("/produto/search-active", "POST"),
+    SEARCH_GRID("/produto/search-grid", "POST");
 
     private final String rota;
     private final String metodo;

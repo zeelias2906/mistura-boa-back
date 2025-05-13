@@ -44,6 +44,35 @@ public class ImplProdutoRepository {
         return query.getResultList();
     }
 
+    public List<Produto> searchActive(FilterSimple filter){
+        var hql = new StringBuilder();
+        hql.append("SELECT distinct p ");
+        hql.append("FROM Produto p ");
+        hql.append("WHERE 1=1");
+
+        hql.append(" AND p.dataExclusao is null ");
+
+        if(filter.getNome() != null && !filter.getNome().isEmpty() && !filter.getNome().isBlank()){
+            hql.append("AND lower(p.nome) LIKE lower(concat('%',:nome, '%')) ");
+        }
+
+        if(filter.getIdsCategoria() != null && !filter.getIdsCategoria().isEmpty()){
+            hql.append("AND p.categoria.id in (:idsCategoria) ");
+        }
+
+
+        var query = entityManager.createQuery(hql.toString(), Produto.class);
+        if(filter.getNome() != null && !filter.getNome().isEmpty() && !filter.getNome().isBlank()){
+            query.setParameter("nome", filter.getNome());
+        }
+
+        if(filter.getIdsCategoria() != null && !filter.getIdsCategoria().isEmpty()){
+            query.setParameter("idsCategoria", filter.getIdsCategoria());
+        }
+
+        return query.getResultList();
+    }
+
     public List<ProdutoCategoriaGrid> searchGridProdCat(FilterSimple filter){
         var hql = new StringBuilder();
         hql.append("SELECT distinct new com.mistura_boa.mistura_boa.models.grids.ProdutoCategoriaGrid( ");

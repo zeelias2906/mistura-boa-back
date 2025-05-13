@@ -76,6 +76,14 @@ public class ProdutoService {
         return produtos.stream().map(produto -> modelMapper.map(produto, ProdutoDTO.class)).toList();
     }
 
+    public List<ProdutoDTO> searchActive(FilterSimple filter) throws Exception{
+        if(filter==null){
+            throw new Exception("Filtro inválido");
+        }
+        var produtos = this.implProdutoRepository.searchActive(filter);
+        return produtos.stream().map(produto -> modelMapper.map(produto, ProdutoDTO.class)).toList();
+    }
+
 
     public List<ProdutoCategoriaGrid> searchGridProdCat(FilterSimple filter) throws Exception{
         if(filter==null){

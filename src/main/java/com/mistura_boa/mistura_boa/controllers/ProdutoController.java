@@ -64,7 +64,7 @@ public class ProdutoController {
 	}
 
 	@GetMapping("/produto-by-categoria/{idCategoria}")
-    // @PreAuthorize("hasRole('GARCOM')")
+    @PreAuthorize("hasRole('GERENTE')")
 	public ResponseEntity<?> getAllByIdCategoria(@PathVariable("idCategoria") Long idCategoria) throws Exception {
 		try {
             return ResponseEntity.ok(produtoService.getAllByIdCategoria(idCategoria));
@@ -74,10 +74,19 @@ public class ProdutoController {
 	}
 
 	@PostMapping("search")
-    // @PreAuthorize("hasRole('GERENTE')")
+    @PreAuthorize("hasRole('GERENTE')")
 	public ResponseEntity<?> search(@RequestBody FilterSimple filter) throws Exception {
 		try {
             return ResponseEntity.ok(produtoService.search(filter));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
+		}
+	}
+
+	@PostMapping("search-active")
+	public ResponseEntity<?> searchActive(@RequestBody FilterSimple filter) throws Exception {
+		try {
+            return ResponseEntity.ok(produtoService.searchActive(filter));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
 		}

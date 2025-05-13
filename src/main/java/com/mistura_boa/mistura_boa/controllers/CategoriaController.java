@@ -47,7 +47,7 @@ public class CategoriaController {
 	}
 
 	@PostMapping("search")
-    // @PreAuthorize("hasRole('GERENTE')")
+    @PreAuthorize("hasRole('GERENTE')")
 	public ResponseEntity<?> search(@RequestBody FilterSimple filter) throws Exception {
 		try {
             return ResponseEntity.ok(categoriaService.search(filter));
@@ -57,7 +57,7 @@ public class CategoriaController {
 	}
 
 	@GetMapping("/")
-    // @PreAuthorize("hasRole('GERENTE')")
+    @PreAuthorize("hasRole('GERENTE')")
 	public ResponseEntity<?> getAll() throws Exception {
 		try {
             return ResponseEntity.ok(categoriaService.getAll());
