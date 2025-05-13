@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: mistura-boa-back
+    env: docker
+    plan: free
+    autoDeploy: true
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        value: jdbc:mysql://<seu_host>:3306/<seu_banco>
+      - key: SPRING_DATASOURCE_USERNAME
+        value: <usuario>
+      - key: SPRING_DATASOURCE_PASSWORD
+        value: <senha>
