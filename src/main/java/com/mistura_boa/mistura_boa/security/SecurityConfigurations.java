@@ -57,7 +57,7 @@ public class SecurityConfigurations {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:4200")); // Permite chamadas do Angular
+        configuration.setAllowedOrigins(List.of("https://mistura-boa-front.netlify.app")); // Permite chamadas do Angular
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Métodos permitidos
         configuration.setAllowedHeaders(List.of("*")); // Permite todos os headers
         configuration.setAllowCredentials(true); // Permite credenciais (cookies, autenticação)
