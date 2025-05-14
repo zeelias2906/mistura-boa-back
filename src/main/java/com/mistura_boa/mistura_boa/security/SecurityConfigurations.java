@@ -67,18 +67,4 @@ public class SecurityConfigurations {
 
         return source; // Retorna a configuração correta para o CORS
     }
-
-    // @Bean
-    // public CorsFilter corsConfigurationSource() {
-    //     CorsConfiguration configuration = new CorsConfiguration();
-    //     configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
-    //     configuration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PUT"));
-    //     configuration.setAllowedHeaders(Arrays.asList("*"));
-    //     configuration.setAllowCredentials(true);
-    //     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    //     source.registerCorsConfiguration("/**", configuration);
-    //     return new CorsFilter(source);
-    // }
-
-
 }
