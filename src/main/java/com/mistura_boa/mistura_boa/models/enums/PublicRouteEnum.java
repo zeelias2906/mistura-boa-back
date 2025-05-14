@@ -1,4 +1,3 @@
-
 package com.mistura_boa.mistura_boa.models.enums;
 
 import java.util.Arrays;
