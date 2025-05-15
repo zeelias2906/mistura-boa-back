@@ -54,14 +54,13 @@ public class SecurityConfigurations {
         return new BCryptPasswordEncoder();
     }
 
-    // ✅ Configuração de CORS completa
      @Bean
 public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
 
     configuration.setAllowedOriginPatterns(List.of(
         "http://localhost:4200",
-        "https://*.netlify.app" // Aceita todos os domínios do Netlify
+        "https://misturaboa.netlify.app" // Aceita todos os domínios do Netlify
     ));
 
     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
