@@ -57,16 +57,20 @@ public class SecurityConfigurations {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://misturaboa.netlify.app")); // Permite chamadas do Angular
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Métodos permitidos
-        configuration.setAllowedHeaders(List.of("*")); // Permite todos os headers
-        configuration.setAllowCredentials(true); // Permite credenciais (cookies, autenticação)
+        configuration.setAllowedOrigins(List.of(
+            "https://misturaboa.netlify.app",
+            "http://localhost:4200"
+        ));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
 
-        return source; // Retorna a configuração correta para o CORS
+        return source;
     }
+
 
     // @Bean
     // public CorsFilter corsConfigurationSource() {
