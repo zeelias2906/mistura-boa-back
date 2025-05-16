@@ -58,9 +58,9 @@ public class SecurityConfigurations {
 public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
     configuration.setAllowedOrigins(List.of(
-        "https://misturaboa.netlify.app",   // domínio do seu front hospedado no Netlify
-        "http://localhost:4200",
-        "https://mistura-boa-front.vercel.app"             // se estiver testando localmente com Angular
+        "https://misturaboa.netlify.app",
+        "https://misturaboa.net",
+        "http://localhost:4200"
     ));
     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
     configuration.setAllowedHeaders(List.of("*"));
