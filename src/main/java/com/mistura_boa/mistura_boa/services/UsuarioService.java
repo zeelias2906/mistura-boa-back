@@ -5,7 +5,6 @@ import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import com.mistura_boa.mistura_boa.models.dtos.ProdutoDTO;
 import com.mistura_boa.mistura_boa.models.dtos.UsuarioDTO;
 import com.mistura_boa.mistura_boa.models.dtos.UsuarioInsertDTO;
 import com.mistura_boa.mistura_boa.models.entities.Usuario;

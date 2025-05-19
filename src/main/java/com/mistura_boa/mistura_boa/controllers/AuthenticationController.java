@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mistura_boa.mistura_boa.models.dtos.LoginDTO;
 import com.mistura_boa.mistura_boa.models.dtos.ResetSenhaDTO;
-import com.mistura_boa.mistura_boa.models.dtos.UsuarioDTO;
 import com.mistura_boa.mistura_boa.models.dtos.UsuarioInsertDTO;
 import com.mistura_boa.mistura_boa.models.entities.Usuario;
 import com.mistura_boa.mistura_boa.security.TokenService;

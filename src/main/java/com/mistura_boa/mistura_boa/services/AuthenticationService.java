@@ -8,7 +8,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.mistura_boa.mistura_boa.models.dtos.ResetSenhaDTO;
-import com.mistura_boa.mistura_boa.models.dtos.UsuarioDTO;
 import com.mistura_boa.mistura_boa.models.dtos.UsuarioInsertDTO;
 import com.mistura_boa.mistura_boa.models.entities.Pessoa;
 import com.mistura_boa.mistura_boa.models.entities.Usuario;

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mistura_boa.mistura_boa.models.dtos.UsuarioInsertDTO;
 import com.mistura_boa.mistura_boa.models.enums.RoleUsuarioEnum;
-import com.mistura_boa.mistura_boa.models.enums.StatusPedidoEnum;
 import com.mistura_boa.mistura_boa.models.filters.FilterSimple;
 import com.mistura_boa.mistura_boa.services.UsuarioService;
 
