@@ -24,6 +24,8 @@ public class ImplCategoriaRepository {
             hql.append("WHERE lower(c.nome) LIKE lower(concat('%',:nome, '%')) ");
         }
 
+        hql.append("ORDER BY c.ordenacao ASC");
+
         var query = entityManager.createQuery(hql.toString(), Categoria.class);
         if(nome != null && !nome.isEmpty() && !nome.isBlank()){
             query.setParameter("nome", nome);

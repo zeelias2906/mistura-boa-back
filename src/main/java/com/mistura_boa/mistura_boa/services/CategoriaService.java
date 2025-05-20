@@ -1,7 +1,9 @@
 package com.mistura_boa.mistura_boa.services;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,12 @@ public class CategoriaService {
         if(this.categoriaRepository.existsCategoriaByNome(dto.getNome(), dto.getId())){
             throw new Exception(" Já Existe uma categoria com esse nome");
         }
+        
+        if(dto.getOrdenacao()==null){
+            Long qtdCategorias = categoriaRepository.count();
+            dto.setOrdenacao(qtdCategorias+1);
+        }
+
         var categoria = this.categoriaRepository.save(modelMapper.map(dto, Categoria.class));
         dto.setId(categoria.getId());
         return dto;
@@ -69,6 +77,21 @@ public class CategoriaService {
         this.categoriaRepository.save(categoria);
         
         return modelMapper.map(categoria, CategoriaDTO.class);
+    }
+
+    public void ordenarCategorias(Map<Long, Long> newList){
+        var listCategorias = new ArrayList<Categoria>();
+        for (Map.Entry<Long, Long> entry : newList.entrySet()) {
+            Categoria categoria = categoriaRepository.findById(entry.getKey()).orElseThrow(() -> new RuntimeException("Categoria não encontrada: " + entry.getKey()));
+
+            categoria.setOrdenacao(entry.getValue());
+            listCategorias.add(categoria);
+        }
+
+        if(!listCategorias.isEmpty()){
+            categoriaRepository.saveAll(listCategorias);
+        }
+            
     }
 
     private void validateCategoriaByProduto(Long id) throws Exception {
