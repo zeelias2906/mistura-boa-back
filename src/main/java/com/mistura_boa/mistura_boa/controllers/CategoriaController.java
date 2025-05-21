@@ -1,6 +1,8 @@
 package com.mistura_boa.mistura_boa.controllers;
 
 
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -71,6 +73,17 @@ public class CategoriaController {
 	public ResponseEntity<?> desativarAtivarCategoria(@PathVariable Long id) throws Exception {
 		try {
             return ResponseEntity.ok(categoriaService.desativarAtivarCategoria(id));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
+		}
+	}
+
+	@PostMapping("ordenar")
+    @PreAuthorize("hasRole('GERENTE')")
+	public ResponseEntity<?> ordenar(@RequestBody Map<Long, Long> newOrder) throws Exception {
+		try {
+			this.categoriaService.ordenarCategorias(newOrder);
+            return ResponseEntity.ok().build();
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
 		}

@@ -60,7 +60,7 @@ public class ImplProdutoRepository {
             hql.append("AND p.categoria.id in (:idsCategoria) ");
         }
 
-        hql.append("ORDER BY p.categoria.ordenacao ASC");
+        // hql.append("ORDER BY p.categoria.ordenacao ASC");
 
         var query = entityManager.createQuery(hql.toString(), Produto.class);
         if(filter.getNome() != null && !filter.getNome().isEmpty() && !filter.getNome().isBlank()){
@@ -85,7 +85,8 @@ public class ImplProdutoRepository {
         hql.append(" c.id, ");
         hql.append(" c.descricao, ");
         hql.append(" c.nome, ");
-        hql.append(" c.icone )");
+        hql.append(" c.icone, ");
+        hql.append(" c.ordenacao )");
         hql.append("FROM Produto p ");
         hql.append("INNER JOIN Categoria c ON p.categoria.id = c.id ");
         hql.append("WHERE 1=1 ");
