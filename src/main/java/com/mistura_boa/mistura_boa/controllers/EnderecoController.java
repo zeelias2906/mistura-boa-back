@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mistura_boa.mistura_boa.models.dtos.EnderecoDTO;
+import com.mistura_boa.mistura_boa.models.filters.EnderecoByUsuarioPageable;
 import com.mistura_boa.mistura_boa.services.EnderecoService;
 
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,16 @@ public class EnderecoController {
 	public ResponseEntity<?> findByUsuario(@PathVariable Long idUsuario) throws Exception {
 		try {
             return ResponseEntity.ok(enderecoService.findAllByUsuario(idUsuario));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
+		}
+	}
+
+	@PostMapping("/by-usuario")
+    @PreAuthorize("hasRole('CLIENTE')")
+	public ResponseEntity<?> findByUsuario(@RequestBody EnderecoByUsuarioPageable enderecoByUsuarioPageable) throws Exception {
+		try {
+            return ResponseEntity.ok(enderecoService.findAllByUsuarioPageable(enderecoByUsuarioPageable));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
 		}

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mistura_boa.mistura_boa.models.dtos.ProdutoDTO;
 import com.mistura_boa.mistura_boa.models.filters.FilterSimple;
+import com.mistura_boa.mistura_boa.models.filters.FilterSimplePageable;
 import com.mistura_boa.mistura_boa.services.ProdutoService;
 
 import lombok.RequiredArgsConstructor;
@@ -75,9 +76,9 @@ public class ProdutoController {
 
 	@PostMapping("search")
     @PreAuthorize("hasRole('GERENTE')")
-	public ResponseEntity<?> search(@RequestBody FilterSimple filter) throws Exception {
+	public ResponseEntity<?> search(@RequestBody FilterSimplePageable filterPageable) throws Exception {
 		try {
-            return ResponseEntity.ok(produtoService.search(filter));
+            return ResponseEntity.ok(produtoService.search(filterPageable));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
 		}

@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.mistura_boa.mistura_boa.models.dtos.CancelarPedidoDTO;
@@ -14,7 +17,9 @@ import com.mistura_boa.mistura_boa.models.dtos.PedidoDTO;
 import com.mistura_boa.mistura_boa.models.dtos.ProdutoPedidoDTO;
 import com.mistura_boa.mistura_boa.models.entities.Pedido;
 import com.mistura_boa.mistura_boa.models.enums.StatusPedidoEnum;
-import com.mistura_boa.mistura_boa.models.filters.PedidoFilter;
+import com.mistura_boa.mistura_boa.models.filters.PedidoByUsuarioPageable;
+import com.mistura_boa.mistura_boa.models.filters.PedidoFilterPageable;
+import com.mistura_boa.mistura_boa.models.grids.PageResponse;
 import com.mistura_boa.mistura_boa.repositories.IPedidoRepository;
 import com.mistura_boa.mistura_boa.repositories.impl.ImplPedidoRepository;
 
@@ -52,14 +57,18 @@ public class PedidoService {
     }
 
 
-    public List<PedidoDTO> getByIdUsuario(Long idUsuario) throws Exception {
-        var pedidos = this.pedidoRepository.findByIdUsuario(idUsuario);
-        if(pedidos.isEmpty()){
+    public PageResponse<PedidoDTO> getByIdUsuario(PedidoByUsuarioPageable pedidoByUsuarioPageable) throws Exception {
+        var pedidosPage = this.pedidoRepository.findByIdUsuario(pedidoByUsuarioPageable.getIdUsuario(), PageRequest.of(pedidoByUsuarioPageable.getPage(), pedidoByUsuarioPageable.getSize()));
+        if(!pedidosPage.hasContent()){
             throw new Exception("Você ainda não fez nenhum pedido!");
         }
 
-        return pedidos.stream().map(pedido -> modelMapper.map(pedido, PedidoDTO.class)).toList();
+        List<PedidoDTO> contentDto = pedidosPage.getContent().stream().map(pedido -> modelMapper.map(pedido, PedidoDTO.class)).toList();
+        Page<PedidoDTO> dtoPage = new PageImpl<>(contentDto,pedidosPage.getPageable(),pedidosPage.getTotalElements());
+
+        return new PageResponse<>(dtoPage);
     }
+
     public PedidoDTO getById(Long id) throws Exception {
         var pedido = this.pedidoRepository.findById(id).orElseThrow(() -> new Exception("Pedido não encontrado"));
 
@@ -106,9 +115,12 @@ public class PedidoService {
         this.pedidoRepository.save(modelMapper.map(pedido, Pedido.class));
     }
 
-    public List<PedidoDTO> search(PedidoFilter filter){
-        var pedidos = this.implPedidoRepository.search(filter);
-        return pedidos.stream().map(pedido -> modelMapper.map(pedido, PedidoDTO.class)).toList();
+    public PageResponse<PedidoDTO> search(PedidoFilterPageable filterPageable) throws Exception{
+        var pedidosPage = this.implPedidoRepository.search(filterPageable.getFilter(),PageRequest.of(filterPageable.getPage(), filterPageable.getSize()));
+        List<PedidoDTO> contentDto = pedidosPage.getContent().stream().map(pedido -> modelMapper.map(pedido, PedidoDTO.class)).toList();
+
+        Page<PedidoDTO> dtoPage = new PageImpl<>(contentDto,pedidosPage.getPageable(),pedidosPage.getTotalElements());
+        return new PageResponse<>(dtoPage);
     }
 
 

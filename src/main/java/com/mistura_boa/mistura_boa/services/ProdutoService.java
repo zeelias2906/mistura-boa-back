@@ -5,12 +5,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.mistura_boa.mistura_boa.models.dtos.ProdutoDTO;
 import com.mistura_boa.mistura_boa.models.entities.Produto;
 import com.mistura_boa.mistura_boa.models.filters.FilterSimple;
+import com.mistura_boa.mistura_boa.models.filters.FilterSimplePageable;
+import com.mistura_boa.mistura_boa.models.grids.PageResponse;
 import com.mistura_boa.mistura_boa.models.grids.ProdutoCategoriaGrid;
+import com.mistura_boa.mistura_boa.models.grids.ProdutoGrid;
 import com.mistura_boa.mistura_boa.repositories.IProdutoRepository;
 import com.mistura_boa.mistura_boa.repositories.impl.ImplProdutoRepository;
 
@@ -68,12 +72,12 @@ public class ProdutoService {
         return produtos.stream().map(produto -> modelMapper.map(produto, ProdutoDTO.class)).toList();
     }
 
-    public List<ProdutoDTO> search(FilterSimple filter) throws Exception{
-        if(filter==null){
+    public PageResponse<ProdutoGrid> search(FilterSimplePageable filterPageable) throws Exception{
+        if(filterPageable.getFilter()==null){
             throw new Exception("Filtro inválido");
         }
-        var produtos = this.implProdutoRepository.search(filter);
-        return produtos.stream().map(produto -> modelMapper.map(produto, ProdutoDTO.class)).toList();
+        var produtosPageable = this.implProdutoRepository.search(filterPageable.getFilter(), PageRequest.of(filterPageable.getPage(), filterPageable.getSize()));
+        return new PageResponse<>(produtosPageable);
     }
 
     public List<ProdutoDTO> searchActive(FilterSimple filter) throws Exception{

@@ -6,11 +6,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.mistura_boa.mistura_boa.models.dtos.CategoriaDTO;
 import com.mistura_boa.mistura_boa.models.entities.Categoria;
-import com.mistura_boa.mistura_boa.models.filters.FilterSimple;
+import com.mistura_boa.mistura_boa.models.filters.FilterSimplePageable;
+import com.mistura_boa.mistura_boa.models.grids.PageResponse;
 import com.mistura_boa.mistura_boa.repositories.ICategoriaRepository;
 import com.mistura_boa.mistura_boa.repositories.impl.ImplCategoriaRepository;
 
@@ -44,12 +48,16 @@ public class CategoriaService {
         return dto;
     }
 
-    public List<CategoriaDTO> search(FilterSimple filter) throws Exception{
-        if(filter==null){
+    public PageResponse<CategoriaDTO> search(FilterSimplePageable filterPageable) throws Exception{
+        if(filterPageable.getFilter()==null){
             throw new Exception("Filtro inválido");
         }
-        var categorias = this.implCategoriaRepository.search(filter.getNome());
-        return categorias.stream().map(categoria -> modelMapper.map(categoria, CategoriaDTO.class)).toList();
+
+        var categoriasPage = this.implCategoriaRepository.search(filterPageable.getFilter(),PageRequest.of(filterPageable.getPage(), filterPageable.getSize()));
+        List<CategoriaDTO> contentDto = categoriasPage.getContent().stream().map(usuario -> modelMapper.map(usuario, CategoriaDTO.class)).toList();
+
+        Page<CategoriaDTO> dtoPage = new PageImpl<>(contentDto,categoriasPage.getPageable(),categoriasPage.getTotalElements());
+        return new PageResponse<>(dtoPage);
     }
 
     public CategoriaDTO getById(Long id) throws Exception{

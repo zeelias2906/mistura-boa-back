@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mistura_boa.mistura_boa.models.dtos.CategoriaDTO;
-import com.mistura_boa.mistura_boa.models.filters.FilterSimple;
+import com.mistura_boa.mistura_boa.models.filters.FilterSimplePageable;
 import com.mistura_boa.mistura_boa.services.CategoriaService;
 
 
@@ -50,7 +50,7 @@ public class CategoriaController {
 
 	@PostMapping("search")
     @PreAuthorize("hasRole('GERENTE')")
-	public ResponseEntity<?> search(@RequestBody FilterSimple filter) throws Exception {
+	public ResponseEntity<?> search(@RequestBody FilterSimplePageable filter) throws Exception {
 		try {
             return ResponseEntity.ok(categoriaService.search(filter));
 		} catch (Exception e) {
