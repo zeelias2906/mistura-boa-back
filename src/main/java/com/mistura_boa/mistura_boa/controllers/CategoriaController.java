@@ -1,6 +1,8 @@
 package com.mistura_boa.mistura_boa.controllers;
 
 
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mistura_boa.mistura_boa.models.dtos.CategoriaDTO;
-import com.mistura_boa.mistura_boa.models.filters.FilterSimple;
+import com.mistura_boa.mistura_boa.models.filters.FilterSimplePageable;
 import com.mistura_boa.mistura_boa.services.CategoriaService;
 
 
@@ -48,7 +50,7 @@ public class CategoriaController {
 
 	@PostMapping("search")
     @PreAuthorize("hasRole('GERENTE')")
-	public ResponseEntity<?> search(@RequestBody FilterSimple filter) throws Exception {
+	public ResponseEntity<?> search(@RequestBody FilterSimplePageable filter) throws Exception {
 		try {
             return ResponseEntity.ok(categoriaService.search(filter));
 		} catch (Exception e) {
@@ -71,6 +73,17 @@ public class CategoriaController {
 	public ResponseEntity<?> desativarAtivarCategoria(@PathVariable Long id) throws Exception {
 		try {
             return ResponseEntity.ok(categoriaService.desativarAtivarCategoria(id));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
+		}
+	}
+
+	@PostMapping("ordenar")
+    @PreAuthorize("hasRole('GERENTE')")
+	public ResponseEntity<?> ordenar(@RequestBody Map<Long, Long> newOrder) throws Exception {
+		try {
+			this.categoriaService.ordenarCategorias(newOrder);
+            return ResponseEntity.ok().build();
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
 		}

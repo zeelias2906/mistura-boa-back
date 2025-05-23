@@ -1,14 +1,20 @@
 package com.mistura_boa.mistura_boa.services;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.mistura_boa.mistura_boa.models.dtos.CategoriaDTO;
 import com.mistura_boa.mistura_boa.models.entities.Categoria;
-import com.mistura_boa.mistura_boa.models.filters.FilterSimple;
+import com.mistura_boa.mistura_boa.models.filters.FilterSimplePageable;
+import com.mistura_boa.mistura_boa.models.grids.PageResponse;
 import com.mistura_boa.mistura_boa.repositories.ICategoriaRepository;
 import com.mistura_boa.mistura_boa.repositories.impl.ImplCategoriaRepository;
 
@@ -31,17 +37,27 @@ public class CategoriaService {
         if(this.categoriaRepository.existsCategoriaByNome(dto.getNome(), dto.getId())){
             throw new Exception(" Já Existe uma categoria com esse nome");
         }
+        
+        if(dto.getOrdenacao()==null){
+            Long qtdCategorias = categoriaRepository.count();
+            dto.setOrdenacao(qtdCategorias+1);
+        }
+
         var categoria = this.categoriaRepository.save(modelMapper.map(dto, Categoria.class));
         dto.setId(categoria.getId());
         return dto;
     }
 
-    public List<CategoriaDTO> search(FilterSimple filter) throws Exception{
-        if(filter==null){
+    public PageResponse<CategoriaDTO> search(FilterSimplePageable filterPageable) throws Exception{
+        if(filterPageable.getFilter()==null){
             throw new Exception("Filtro inválido");
         }
-        var categorias = this.implCategoriaRepository.search(filter.getNome());
-        return categorias.stream().map(categoria -> modelMapper.map(categoria, CategoriaDTO.class)).toList();
+
+        var categoriasPage = this.implCategoriaRepository.search(filterPageable.getFilter(),PageRequest.of(filterPageable.getPage(), filterPageable.getSize()));
+        List<CategoriaDTO> contentDto = categoriasPage.getContent().stream().map(usuario -> modelMapper.map(usuario, CategoriaDTO.class)).toList();
+
+        Page<CategoriaDTO> dtoPage = new PageImpl<>(contentDto,categoriasPage.getPageable(),categoriasPage.getTotalElements());
+        return new PageResponse<>(dtoPage);
     }
 
     public CategoriaDTO getById(Long id) throws Exception{
@@ -69,6 +85,21 @@ public class CategoriaService {
         this.categoriaRepository.save(categoria);
         
         return modelMapper.map(categoria, CategoriaDTO.class);
+    }
+
+    public void ordenarCategorias(Map<Long, Long> newList){
+        var listCategorias = new ArrayList<Categoria>();
+        for (Map.Entry<Long, Long> entry : newList.entrySet()) {
+            Categoria categoria = categoriaRepository.findById(entry.getKey()).orElseThrow(() -> new RuntimeException("Categoria não encontrada: " + entry.getKey()));
+
+            categoria.setOrdenacao(entry.getValue());
+            listCategorias.add(categoria);
+        }
+
+        if(!listCategorias.isEmpty()){
+            categoriaRepository.saveAll(listCategorias);
+        }
+            
     }
 
     private void validateCategoriaByProduto(Long id) throws Exception {

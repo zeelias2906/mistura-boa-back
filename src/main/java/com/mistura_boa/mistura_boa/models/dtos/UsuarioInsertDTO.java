@@ -1,7 +1,6 @@
 package com.mistura_boa.mistura_boa.models.dtos;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mistura_boa.mistura_boa.models.enums.RoleUsuarioEnum;
 
 import jakarta.validation.constraints.NotBlank;

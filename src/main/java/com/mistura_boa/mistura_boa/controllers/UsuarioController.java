@@ -13,8 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mistura_boa.mistura_boa.models.dtos.UsuarioInsertDTO;
 import com.mistura_boa.mistura_boa.models.enums.RoleUsuarioEnum;
-import com.mistura_boa.mistura_boa.models.enums.StatusPedidoEnum;
-import com.mistura_boa.mistura_boa.models.filters.FilterSimple;
+import com.mistura_boa.mistura_boa.models.filters.FilterSimplePageable;
 import com.mistura_boa.mistura_boa.services.UsuarioService;
 
 import lombok.RequiredArgsConstructor;
@@ -50,7 +49,7 @@ public class UsuarioController {
 
 	@PostMapping("/search")
     @PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<?> search(@RequestBody @Validated FilterSimple filter) throws Exception {
+	public ResponseEntity<?> search(@RequestBody @Validated FilterSimplePageable filter) throws Exception {
 		try {
             return ResponseEntity.ok(usuarioService.search(filter));
 		} catch (Exception e) {

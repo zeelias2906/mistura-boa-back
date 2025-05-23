@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mistura_boa.mistura_boa.models.dtos.CancelarPedidoDTO;
 import com.mistura_boa.mistura_boa.models.dtos.PedidoDTO;
 import com.mistura_boa.mistura_boa.models.enums.StatusPedidoEnum;
-import com.mistura_boa.mistura_boa.models.filters.PedidoFilter;
+import com.mistura_boa.mistura_boa.models.filters.PedidoByUsuarioPageable;
+import com.mistura_boa.mistura_boa.models.filters.PedidoFilterPageable;
 import com.mistura_boa.mistura_boa.services.PedidoService;
 
 import lombok.RequiredArgsConstructor;
@@ -36,11 +37,11 @@ public class PedidoController {
 		}
 	}
 
-    @GetMapping("/by-usuario/{idUsuario}")
+    @PostMapping("/by-usuario")
     @PreAuthorize("hasRole('CLIENTE')")
-	public ResponseEntity<?> getByIdUsuario(@PathVariable Long idUsuario) throws Exception {
+	public ResponseEntity<?> getByIdUsuario(@RequestBody PedidoByUsuarioPageable PedidoByUsuarioPageable ) throws Exception {
 		try {
-            return ResponseEntity.ok(pedidoService.getByIdUsuario(idUsuario));
+            return ResponseEntity.ok(pedidoService.getByIdUsuario(PedidoByUsuarioPageable));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
 		}
@@ -112,7 +113,7 @@ public class PedidoController {
 
 	@PostMapping("/search")
     @PreAuthorize("hasRole('GERENTE')")
-	public ResponseEntity<?> search(@RequestBody @Validated PedidoFilter filter) throws Exception {
+	public ResponseEntity<?> search(@RequestBody @Validated PedidoFilterPageable filter) throws Exception {
 		try {
             return ResponseEntity.ok(this.pedidoService.search(filter));
 		} catch (Exception e) {

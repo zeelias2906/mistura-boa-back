@@ -21,4 +21,5 @@ public class ProdutoCategoriaGrid {
     private String descricaoCategoria;
     private String nomeCategoria;
     private String iconeCategoria;
+    private Long ordenacao;
 }

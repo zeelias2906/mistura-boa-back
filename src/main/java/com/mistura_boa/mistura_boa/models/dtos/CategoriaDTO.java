@@ -21,4 +21,5 @@ public class CategoriaDTO {
     private String nome;
     private String icone;
     private LocalDateTime dataExclusao;
+    private Long ordenacao;
 }

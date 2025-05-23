@@ -41,6 +41,9 @@ public class Categoria {
     @Column(name = "DT_EXCLUSAO")
     private LocalDateTime dataExclusao;
 
+    @Column(name = "ORDENACAO")
+	private Long ordenacao;
+
     @OneToMany(mappedBy = "categoria", fetch = FetchType.LAZY)
 	private List<Produto> produtos;
 

@@ -3,14 +3,17 @@ package com.mistura_boa.mistura_boa.services;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import com.mistura_boa.mistura_boa.models.dtos.ProdutoDTO;
 import com.mistura_boa.mistura_boa.models.dtos.UsuarioDTO;
 import com.mistura_boa.mistura_boa.models.dtos.UsuarioInsertDTO;
 import com.mistura_boa.mistura_boa.models.entities.Usuario;
 import com.mistura_boa.mistura_boa.models.enums.RoleUsuarioEnum;
-import com.mistura_boa.mistura_boa.models.filters.FilterSimple;
+import com.mistura_boa.mistura_boa.models.filters.FilterSimplePageable;
+import com.mistura_boa.mistura_boa.models.grids.PageResponse;
 import com.mistura_boa.mistura_boa.repositories.IUsuarioRepository;
 import com.mistura_boa.mistura_boa.repositories.impl.ImplUsuarioRepository;
 
@@ -57,12 +60,16 @@ public class UsuarioService {
 		return  usuarioRepository.isEmailUnique(email, id);
 	}
 
-    public List<UsuarioDTO> search(FilterSimple filter) throws Exception {
-	    if(filter==null){
+    public PageResponse<UsuarioDTO> search(FilterSimplePageable filterPageable) throws Exception {
+	    if(filterPageable.getFilter()==null){
             throw new Exception("Filtro inválido");
         }
-        var usuarios = this.implUsuarioRepository.search(filter.getNome());
-        return usuarios.stream().map(usuario -> modelMapper.map(usuario, UsuarioDTO.class)).toList();
+
+		var usuariosPage = this.implUsuarioRepository.search(filterPageable.getFilter(),PageRequest.of(filterPageable.getPage(), filterPageable.getSize()));
+        List<UsuarioDTO> contentDto = usuariosPage.getContent().stream().map(usuario -> modelMapper.map(usuario, UsuarioDTO.class)).toList();
+
+        Page<UsuarioDTO> dtoPage = new PageImpl<>(contentDto,usuariosPage.getPageable(),usuariosPage.getTotalElements());
+        return new PageResponse<>(dtoPage);
     }
 
 	public void changeTipoUsuario(Long id, RoleUsuarioEnum newTipoUsuario) throws Exception{
