@@ -1,6 +1,7 @@
 package com.mistura_boa.mistura_boa.models.dtos;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -22,7 +23,11 @@ public class ProdutoDTO {
     private LocalDateTime dataExclusao;
     @NotBlank(message = "Produto precisa ter uma imagem")
     private String imgProduto;
+    private Boolean isTamanhoUnico;
     private Float valor;
+    private Float menorValor;
     private CategoriaDTO categoria;
+    private List<TamanhoPrecoDTO> tamanhoPrecos;
+    private Long ordenacao;
 
 }

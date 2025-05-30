@@ -76,6 +76,8 @@ public class ImplProdutoRepository {
             hql.append("AND p.categoria.id in (:idsCategoria) ");
         }
 
+        hql.append(" ORDER BY p.ordenacao ASC ");
+
         var query = entityManager.createQuery(hql.toString(), Produto.class);
         if(filter.getNome() != null && !filter.getNome().isEmpty() && !filter.getNome().isBlank()){
             query.setParameter("nome", filter.getNome());
@@ -96,11 +98,13 @@ public class ImplProdutoRepository {
         hql.append(" p.nome, ");
         hql.append(" p.imgProduto, ");
         hql.append(" p.valor, ");
+        hql.append(" p.menorValor, ");
         hql.append(" c.id, ");
         hql.append(" c.descricao, ");
         hql.append(" c.nome, ");
         hql.append(" c.icone, ");
-        hql.append(" c.ordenacao )");
+        hql.append(" c.ordenacao, ");
+        hql.append(" p.ordenacao )");
         hql.append("FROM Produto p ");
         hql.append("INNER JOIN Categoria c ON p.categoria.id = c.id ");
         hql.append("WHERE 1=1 ");
@@ -116,7 +120,7 @@ public class ImplProdutoRepository {
             hql.append("AND p.categoria.id in (:idsCategoria) ");
         }
 
-        hql.append("ORDER BY c.ordenacao ASC");
+        hql.append("ORDER BY c.ordenacao ASC, p.ordenacao ASC ");
 
         var query = entityManager.createQuery(hql.toString(), ProdutoCategoriaGrid.class);
         if(filter.getNome() != null && !filter.getNome().isEmpty() && !filter.getNome().isBlank()){

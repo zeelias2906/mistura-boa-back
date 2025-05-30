@@ -19,33 +19,22 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "PRODUTO_PEDIDO")
-public class ProdutoPedido {
+@Table(name = "TAMANHO_PRECO")
+public class TamanhoPreco {
 
     @Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID_PRODUTO_PEDIDO")
+	@Column(name = "ID_TAMANHO_PRECO")
 	private Long id;
 
-    @Column(name = "OBSERVACAO")
-    private String observacao;
+    @Column(name = "TAMANHO")
+    private String tamanho;
 
-    @Column(name = "VALOR_MOMENTO_COMPRA")
-    private Float valorMomentoCompra;
+    @Column(name = "VALOR")
+    private Float valor;
 
-    @Column(name = "TAMANHO_MOMENTO_COMPRA")
-    private String tamanhoMomentoCompra;
-
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_PRODUTO", nullable = false)
     private Produto produto;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ID_PEDIDO", nullable = false)
-    private Pedido pedido;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "ID_TAMANHO_PRECO", nullable = false)
-    private TamanhoPreco tamanhoPreco;
 
 }

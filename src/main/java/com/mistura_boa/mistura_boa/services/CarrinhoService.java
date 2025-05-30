@@ -24,15 +24,14 @@ public class CarrinhoService {
     public CarrinhoDTO save(CarrinhoDTO dto) {
         var carrinho = this.carrinhoRepository.findByIdUsuario(dto.getUsuario().getId());
         if(carrinho == null){
-            dto.setValorTotal(BigDecimal.valueOf(dto.getProdutosCarrinho().stream().map(produto -> produto.getProduto().getValor()).toList().get(0)));
+            dto.setValorTotal(calculateValorTotal(dto));
             dto.getProdutosCarrinho().get(0).setCarrinho(dto);
             carrinho = carrinhoRepository.save(modelMapper.map(dto, Carrinho.class));
         }else{
             var prodCar = modelMapper.map(dto.getProdutosCarrinho().get(0), ProdutoCarrinho.class);
             prodCar.setCarrinho(carrinho);
-            // this.produtoCarrinhoService.save(modelMapper.map(prodCar, ProdutoCarrinhoDTO.class));
             carrinho.getProdutosCarrinho().add(prodCar);
-            carrinho.setValorTotal(carrinho.getValorTotal().add(BigDecimal.valueOf(prodCar.getProduto().getValor())));
+            carrinho.setValorTotal(carrinho.getValorTotal().add(calculateValorTotal(dto)));
             carrinhoRepository.save(carrinho);
         }
         
@@ -66,6 +65,20 @@ public class CarrinhoService {
 
     public void clearCarrinho(Long idCarrinho) {
         this.carrinhoRepository.deleteById(idCarrinho);
+    }
+
+    private BigDecimal calculateValorTotal(CarrinhoDTO dto){
+        BigDecimal valorTotal = BigDecimal.ZERO;
+
+        for (var produto : dto.getProdutosCarrinho()) {
+            if (produto.getTamanhoPreco() != null && produto.getTamanhoPreco().getId() != null) {
+                valorTotal = valorTotal.add(BigDecimal.valueOf(produto.getTamanhoPreco().getValor()));
+            } else {
+                valorTotal = valorTotal.add(BigDecimal.valueOf(produto.getProduto().getValor()));
+            }
+        }
+
+        return valorTotal;
     }
 
 }
