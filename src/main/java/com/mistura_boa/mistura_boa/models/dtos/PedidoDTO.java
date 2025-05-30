@@ -30,5 +30,6 @@ public class PedidoDTO {
     private LocalDateTime dataFechamentoPedido;
     private UsuarioDTO usuario;
     private EnderecoDTO endereco;
+    private String zonaEntrega;
     private List<ProdutoPedidoDTO> produtosPedido;
 }

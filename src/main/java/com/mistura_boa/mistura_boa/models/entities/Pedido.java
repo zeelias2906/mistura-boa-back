@@ -75,6 +75,9 @@ public class Pedido {
 	@JoinColumn(name = "ID_ENDERECO")
     private Endereco endereco;
 
+    @Column(name = "ZONA_ENTREGA")
+    private String zonaEntrega;
+
     @OneToMany(mappedBy = "pedido", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProdutoPedido> produtosPedido;
 
