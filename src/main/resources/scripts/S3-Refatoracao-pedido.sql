@@ -21,3 +21,5 @@ alter table produto_pedido add constraint fk_produto_pedido_tamanho_preco foreig
 alter table produto add column ordenacao bigint;
 update produto set ordenacao = id_produto where ordenacao is null;
 alter table produto modify column ordenacao bigint not null;
+
+alter table pedido add column zona_entrega varchar(50);
