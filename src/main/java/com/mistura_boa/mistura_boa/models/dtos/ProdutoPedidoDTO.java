@@ -18,5 +18,8 @@ public class ProdutoPedidoDTO {
     private ProdutoDTO produto;
     @JsonIgnore
     private PedidoDTO pedido;
+    private TamanhoPrecoDTO tamanhoPreco;
+    private Float valorMomentoCompra;
+    private String tamanhoMomentoCompra;
 
 }

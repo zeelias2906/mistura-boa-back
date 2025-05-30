@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.mistura_boa.mistura_boa.models.dtos.CategoriaDTO;
 import com.mistura_boa.mistura_boa.models.entities.Categoria;
 import com.mistura_boa.mistura_boa.models.filters.FilterSimplePageable;
+import com.mistura_boa.mistura_boa.models.grids.OptionsSelects;
 import com.mistura_boa.mistura_boa.models.grids.PageResponse;
 import com.mistura_boa.mistura_boa.repositories.ICategoriaRepository;
 import com.mistura_boa.mistura_boa.repositories.impl.ImplCategoriaRepository;
@@ -85,6 +86,10 @@ public class CategoriaService {
         this.categoriaRepository.save(categoria);
         
         return modelMapper.map(categoria, CategoriaDTO.class);
+    }
+
+    public List<OptionsSelects> getOptionsSelects(){
+        return this.categoriaRepository.getOptionsSelects();
     }
 
     public void ordenarCategorias(Map<Long, Long> newList){

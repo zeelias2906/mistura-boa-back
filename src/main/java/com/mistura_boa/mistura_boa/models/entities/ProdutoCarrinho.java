@@ -39,5 +39,8 @@ public class ProdutoCarrinho {
 	@JoinColumn(name = "ID_CARRINHO", nullable = false)
     private Carrinho carrinho;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "ID_TAMANHO_PRECO", nullable = false)
+    private TamanhoPreco tamanhoPreco;
 
 }
