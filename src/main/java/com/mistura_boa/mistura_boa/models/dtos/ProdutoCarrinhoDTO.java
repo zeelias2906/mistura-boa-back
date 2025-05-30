@@ -18,4 +18,5 @@ public class ProdutoCarrinhoDTO {
     private ProdutoDTO produto;
     @JsonIgnore
     private CarrinhoDTO carrinho;
+    private TamanhoPrecoDTO tamanhoPreco;
 }

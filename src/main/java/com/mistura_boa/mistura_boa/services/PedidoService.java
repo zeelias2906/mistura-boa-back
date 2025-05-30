@@ -3,6 +3,7 @@ package com.mistura_boa.mistura_boa.services;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.mistura_boa.mistura_boa.models.dtos.CancelarPedidoDTO;
 import com.mistura_boa.mistura_boa.models.dtos.PedidoDTO;
+import com.mistura_boa.mistura_boa.models.dtos.ProdutoCarrinhoDTO;
 import com.mistura_boa.mistura_boa.models.dtos.ProdutoPedidoDTO;
 import com.mistura_boa.mistura_boa.models.entities.Pedido;
 import com.mistura_boa.mistura_boa.models.enums.StatusPedidoEnum;
@@ -39,9 +41,13 @@ public class PedidoService {
     @Transactional
     public PedidoDTO save(Long idCarrinho, PedidoDTO dto) throws Exception {
         var carrinho = this.carrinhoService.getById(idCarrinho);
-        var produtosPedido = carrinho.getProdutosCarrinho().stream().map(produtoCarrinho -> modelMapper.map(produtoCarrinho, ProdutoPedidoDTO.class)).toList();
-        produtosPedido.stream().forEach(produto -> produto.setPedido(dto));
-        produtosPedido.stream().forEach(produto -> produto.setId(null));
+
+        var produtosPedido = mapProdCarrinhoToProdPedido(carrinho.getProdutosCarrinho());
+
+        produtosPedido.forEach(produto -> {
+            produto.setPedido(dto);
+            produto.setId(null);
+        });
 
         dto.setNumeroPedido( UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE);
         dto.setProdutosPedido(produtosPedido);
@@ -56,6 +62,22 @@ public class PedidoService {
         return dto;
     }
 
+    private List<ProdutoPedidoDTO> mapProdCarrinhoToProdPedido(List<ProdutoCarrinhoDTO> produtosCarrinho) {
+        List<ProdutoPedidoDTO> produtosPedido = new ArrayList<>();
+        
+        for(var prodCar: produtosCarrinho){
+            var prodPed = modelMapper.map(prodCar, ProdutoPedidoDTO.class);
+            if(prodCar.getTamanhoPreco()==null){
+                prodPed.setValorMomentoCompra(prodCar.getProduto().getValor());
+            }else{
+                prodPed.setTamanhoMomentoCompra(prodCar.getTamanhoPreco().getTamanho());
+                prodPed.setValorMomentoCompra(prodCar.getTamanhoPreco().getValor());
+            }
+            produtosPedido.add(prodPed);
+        }
+
+        return produtosPedido;
+    }
 
     public PageResponse<PedidoDTO> getByIdUsuario(PedidoByUsuarioPageable pedidoByUsuarioPageable) throws Exception {
         var pedidosPage = this.pedidoRepository.findByIdUsuario(pedidoByUsuarioPageable.getIdUsuario(), PageRequest.of(pedidoByUsuarioPageable.getPage(), pedidoByUsuarioPageable.getSize()));

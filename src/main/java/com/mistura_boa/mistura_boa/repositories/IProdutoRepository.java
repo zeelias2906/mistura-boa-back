@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.mistura_boa.mistura_boa.models.entities.Produto;
+import com.mistura_boa.mistura_boa.models.grids.OptionsSelects;
 
 public interface IProdutoRepository extends JpaRepository<Produto, Long> {
 
@@ -15,5 +16,8 @@ public interface IProdutoRepository extends JpaRepository<Produto, Long> {
 
     @Query("Select p from Produto p where p.categoria.id = :idCategoria")
     public List<Produto> findAllByIdCategoria(@Param("idCategoria") Long idCategoria);
+
+    @Query("SELECT new com.mistura_boa.mistura_boa.models.grids.OptionsSelects(p.id, p.nome) FROM Produto p where p.categoria.id = :idCategoria ORDER BY p.ordenacao")
+    public List<OptionsSelects> getOptionsSelectsByIdCategoria(@Param("idCategoria") Long idCategoria);
 
 }

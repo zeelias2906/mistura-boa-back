@@ -89,5 +89,13 @@ public class CategoriaController {
 		}
 	}
 
+	@GetMapping("/options-selects")
+	public ResponseEntity<?> getOptionsSelects() throws Exception {
+		try {
+            return ResponseEntity.ok(categoriaService.getOptionsSelects());
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
+		}
+	}
 
 }
