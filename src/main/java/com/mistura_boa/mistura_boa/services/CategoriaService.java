@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.mistura_boa.mistura_boa.models.dtos.CategoriaDTO;
 import com.mistura_boa.mistura_boa.models.entities.Categoria;
 import com.mistura_boa.mistura_boa.models.filters.FilterSimplePageable;
+import com.mistura_boa.mistura_boa.models.grids.CategoriaGrid;
 import com.mistura_boa.mistura_boa.models.grids.OptionsSelects;
 import com.mistura_boa.mistura_boa.models.grids.PageResponse;
 import com.mistura_boa.mistura_boa.repositories.ICategoriaRepository;
@@ -70,6 +71,11 @@ public class CategoriaService {
     public List<CategoriaDTO> getAll() throws Exception{
         var categorias = this.categoriaRepository.findAll();
         return categorias.stream().map(categoria -> modelMapper.map(categoria, CategoriaDTO.class)).toList();
+    }
+
+    
+    public List<CategoriaGrid> getAllActiveForGrid() throws Exception{
+        return this.implCategoriaRepository.getAllActiveForGrid();
     }
 
     public CategoriaDTO desativarAtivarCategoria(Long id) throws Exception{

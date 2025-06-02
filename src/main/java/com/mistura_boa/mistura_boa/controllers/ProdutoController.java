@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mistura_boa.mistura_boa.models.dtos.ProdutoDTO;
-import com.mistura_boa.mistura_boa.models.filters.FilterSimple;
 import com.mistura_boa.mistura_boa.models.filters.FilterSimplePageable;
 import com.mistura_boa.mistura_boa.services.ProdutoService;
 
@@ -87,18 +86,18 @@ public class ProdutoController {
 	}
 
 	@PostMapping("search-active")
-	public ResponseEntity<?> searchActive(@RequestBody FilterSimple filter) throws Exception {
+	public ResponseEntity<?> searchActive(@RequestBody FilterSimplePageable filterPageable) throws Exception {
 		try {
-            return ResponseEntity.ok(produtoService.searchActive(filter));
+            return ResponseEntity.ok(produtoService.searchActive(filterPageable));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
 		}
 	}
 
 	@PostMapping("search-grid")
-	public ResponseEntity<?> searchGridProdCat(@RequestBody FilterSimple filter) throws Exception {
+	public ResponseEntity<?> searchGridProdCat(@RequestBody FilterSimplePageable filterPageable) throws Exception {
 		try {
-            return ResponseEntity.ok(produtoService.searchGridProdCat(filter));
+            return ResponseEntity.ok(produtoService.searchGridProdCat(filterPageable));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
 		}

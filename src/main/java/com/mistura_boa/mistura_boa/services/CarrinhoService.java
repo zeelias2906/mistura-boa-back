@@ -57,7 +57,12 @@ public class CarrinhoService {
         var carrinho = this.carrinhoRepository.findById(idCarrinho).orElseThrow(() -> new Exception("Carrinho não encontrado"));
         var prodCar = this.produtoCarrinhoService.getById(idProdutoCarrinho);
 
-        carrinho.setValorTotal(carrinho.getValorTotal().subtract(BigDecimal.valueOf(prodCar.getProduto().getValor())));
+        if(prodCar.getTamanhoPreco() == null){
+            carrinho.setValorTotal(carrinho.getValorTotal().subtract(BigDecimal.valueOf(prodCar.getProduto().getValor())));
+        }else{
+            carrinho.setValorTotal(carrinho.getValorTotal().subtract(BigDecimal.valueOf(prodCar.getTamanhoPreco().getValor())));
+        }
+        
         this.carrinhoRepository.save(carrinho);
         this.produtoCarrinhoService.delete(idProdutoCarrinho);
         
