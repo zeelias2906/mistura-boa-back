@@ -98,4 +98,13 @@ public class CategoriaController {
 		}
 	}
 
+	@GetMapping("/grid")
+	public ResponseEntity<?> getAllActiveForGrid() throws Exception {
+		try {
+            return ResponseEntity.ok(categoriaService.getAllActiveForGrid());
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
+		}
+	}
+
 }

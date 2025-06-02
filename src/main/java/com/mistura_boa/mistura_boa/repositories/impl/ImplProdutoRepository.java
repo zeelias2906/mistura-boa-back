@@ -1,6 +1,5 @@
 package com.mistura_boa.mistura_boa.repositories.impl;
 
-import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -60,9 +59,28 @@ public class ImplProdutoRepository {
         return query.getSingleResult();
 	}
 
-    public List<Produto> searchActive(FilterSimple filter){
+    public Page<Produto> searchActive(FilterSimple filter, Pageable pageable){
         var hql = new StringBuilder();
         hql.append("SELECT distinct p ");
+        montarQuerySearchActive(hql, filter);
+
+        var query = entityManager.createQuery(hql.toString(), Produto.class);
+        if(filter.getNome() != null && !filter.getNome().isEmpty() && !filter.getNome().isBlank()){
+            query.setParameter("nome", filter.getNome());
+        }
+
+        if(filter.getIdsCategoria() != null && !filter.getIdsCategoria().isEmpty()){
+            query.setParameter("idsCategoria", filter.getIdsCategoria());
+        }
+
+        query.setFirstResult((int) pageable.getOffset());
+        query.setMaxResults(pageable.getPageSize());
+        var result = query.getResultList();
+
+        return new PageImpl<>(result, pageable, countTotalResultsSearchActive(filter));
+    }
+
+    private void montarQuerySearchActive(StringBuilder hql, FilterSimple filter){
         hql.append("FROM Produto p ");
         hql.append("WHERE 1=1");
 
@@ -78,7 +96,14 @@ public class ImplProdutoRepository {
 
         hql.append(" ORDER BY p.ordenacao ASC ");
 
-        var query = entityManager.createQuery(hql.toString(), Produto.class);
+    }
+
+    public Long countTotalResultsSearchActive(FilterSimple filter){
+        var hql = new StringBuilder();
+        hql.append("SELECT count(p.id)  ");
+        montarQuerySearchActive(hql, filter);
+
+        var query = entityManager.createQuery(hql.toString(), Long.class);
         if(filter.getNome() != null && !filter.getNome().isEmpty() && !filter.getNome().isBlank()){
             query.setParameter("nome", filter.getNome());
         }
@@ -87,10 +112,10 @@ public class ImplProdutoRepository {
             query.setParameter("idsCategoria", filter.getIdsCategoria());
         }
 
-        return query.getResultList();
+        return query.getSingleResult();
     }
 
-    public List<ProdutoCategoriaGrid> searchGridProdCat(FilterSimple filter){
+    public Page<ProdutoCategoriaGrid> searchGridProdCat(FilterSimple filter, Pageable pageable) throws Exception{
         var hql = new StringBuilder();
         hql.append("SELECT distinct new com.mistura_boa.mistura_boa.models.grids.ProdutoCategoriaGrid( ");
         hql.append(" p.id, ");
@@ -100,11 +125,45 @@ public class ImplProdutoRepository {
         hql.append(" p.valor, ");
         hql.append(" p.menorValor, ");
         hql.append(" c.id, ");
-        hql.append(" c.descricao, ");
-        hql.append(" c.nome, ");
-        hql.append(" c.icone, ");
         hql.append(" c.ordenacao, ");
         hql.append(" p.ordenacao )");
+        montarQuerySearchGridProd(hql, filter);
+
+        var query = entityManager.createQuery(hql.toString(), ProdutoCategoriaGrid.class);
+        if(filter.getNome() != null && !filter.getNome().isEmpty() && !filter.getNome().isBlank()){
+            query.setParameter("nome", filter.getNome());
+        }
+
+        if(filter.getIdsCategoria() != null && !filter.getIdsCategoria().isEmpty()){
+            query.setParameter("idsCategoria", filter.getIdsCategoria());
+        }
+
+        
+        query.setFirstResult((int) pageable.getOffset());
+        query.setMaxResults(pageable.getPageSize());
+        var result = query.getResultList();
+
+        return new PageImpl<>(result, pageable, countTotalResultsSearchGridProd(filter));
+    }
+
+    public Long countTotalResultsSearchGridProd(FilterSimple filter) throws Exception{
+        var hql = new StringBuilder();
+		hql.append(" select count(p.id) ");
+        montarQuerySearchGridProd(hql, filter);
+
+        var query = entityManager.createQuery(hql.toString(), Long.class);
+        if(filter.getNome() != null && !filter.getNome().isEmpty() && !filter.getNome().isBlank()){
+            query.setParameter("nome", filter.getNome());
+        }
+
+        if(filter.getIdsCategoria() != null && !filter.getIdsCategoria().isEmpty()){
+            query.setParameter("idsCategoria", filter.getIdsCategoria());
+        }
+        
+        return query.getSingleResult();
+    }
+
+    public void montarQuerySearchGridProd(StringBuilder hql, FilterSimple filter){
         hql.append("FROM Produto p ");
         hql.append("INNER JOIN Categoria c ON p.categoria.id = c.id ");
         hql.append("WHERE 1=1 ");
@@ -121,17 +180,6 @@ public class ImplProdutoRepository {
         }
 
         hql.append("ORDER BY c.ordenacao ASC, p.ordenacao ASC ");
-
-        var query = entityManager.createQuery(hql.toString(), ProdutoCategoriaGrid.class);
-        if(filter.getNome() != null && !filter.getNome().isEmpty() && !filter.getNome().isBlank()){
-            query.setParameter("nome", filter.getNome());
-        }
-
-        if(filter.getIdsCategoria() != null && !filter.getIdsCategoria().isEmpty()){
-            query.setParameter("idsCategoria", filter.getIdsCategoria());
-        }
-
-        return query.getResultList();
     }
 
     private void montarSelectGrid(StringBuilder hql){
