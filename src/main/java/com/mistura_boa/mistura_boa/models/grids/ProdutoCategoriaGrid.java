@@ -19,9 +19,6 @@ public class ProdutoCategoriaGrid {
     private Float valorProduto;
     private Float menorValorProduto;
     private Long idCategoria;
-    private String descricaoCategoria;
-    private String nomeCategoria;
-    private String iconeCategoria;
     private Long ordenacaoCategoria;
     private Long ordenacaoProduto;
     

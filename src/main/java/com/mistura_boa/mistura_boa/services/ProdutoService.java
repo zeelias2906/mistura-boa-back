@@ -10,13 +10,14 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.mistura_boa.mistura_boa.models.dtos.ProdutoDTO;
 import com.mistura_boa.mistura_boa.models.entities.Produto;
 import com.mistura_boa.mistura_boa.models.entities.TamanhoPreco;
-import com.mistura_boa.mistura_boa.models.filters.FilterSimple;
 import com.mistura_boa.mistura_boa.models.filters.FilterSimplePageable;
 import com.mistura_boa.mistura_boa.models.grids.OptionsSelects;
 import com.mistura_boa.mistura_boa.models.grids.PageResponse;
@@ -104,21 +105,26 @@ public class ProdutoService {
         return new PageResponse<>(produtosPageable);
     }
 
-    public List<ProdutoDTO> searchActive(FilterSimple filter) throws Exception{
-        if(filter==null){
+    public PageResponse<ProdutoDTO> searchActive(FilterSimplePageable filterPageable) throws Exception{
+        if(filterPageable.getFilter()==null){
             throw new Exception("Filtro inválido");
         }
-        var produtos = this.implProdutoRepository.searchActive(filter);
-        return produtos.stream().map(produto -> modelMapper.map(produto, ProdutoDTO.class)).toList();
+        
+        var produtosPage = this.implProdutoRepository.searchActive(filterPageable.getFilter(), PageRequest.of(filterPageable.getPage(), filterPageable.getSize()));
+        List<ProdutoDTO> contentDto = produtosPage.getContent().stream().map(produto -> modelMapper.map(produto, ProdutoDTO.class)).toList();
+        Page<ProdutoDTO> dtoPage = new PageImpl<>(contentDto,produtosPage.getPageable(),produtosPage.getTotalElements());
+
+        return new PageResponse<>(dtoPage);
+
     }
 
 
-    public List<ProdutoCategoriaGrid> searchGridProdCat(FilterSimple filter) throws Exception{
-        if(filter==null){
+    public PageResponse<ProdutoCategoriaGrid> searchGridProdCat(FilterSimplePageable filterPageable) throws Exception{
+        if(filterPageable.getFilter()==null){
             throw new Exception("Filtro inválido");
         }
 
-        return  this.implProdutoRepository.searchGridProdCat(filter);
+        return new PageResponse<>(this.implProdutoRepository.searchGridProdCat(filterPageable.getFilter(), PageRequest.of(filterPageable.getPage(), filterPageable.getSize())));
     }
 
     public void ordenarProdutos(Map<Long, Long> newList){

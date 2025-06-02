@@ -9,10 +9,14 @@ import com.mistura_boa.mistura_boa.models.entities.ProdutoCarrinho;
 
 import jakarta.transaction.Transactional;
 
+
 public interface IProdutoCarrinhoRepository extends JpaRepository<ProdutoCarrinho, Long> {
 
     @Transactional
     @Modifying
     @Query ("delete from ProdutoCarrinho pc where pc.id = :id")
     public void deleteById(@Param("id") Long id);
+
+    @Query ("select pc from ProdutoCarrinho pc where pc.id = :id")
+    public ProdutoCarrinho findByIdProdutoCarrinho(@Param("id") Long id);
 }
