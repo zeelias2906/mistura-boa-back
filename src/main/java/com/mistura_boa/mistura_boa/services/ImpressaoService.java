@@ -1,6 +1,7 @@
 package com.mistura_boa.mistura_boa.services;
 
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -44,7 +45,9 @@ public class ImpressaoService {
         Document document = new Document(pdf);
 
         try {
-            ImageData imageData = ImageDataFactory.create("src/main/resources/imgs/logo.jpg");
+            InputStream logoStream = getClass().getResourceAsStream("/imgs/logo.jpg");
+            byte[] imageBytes = logoStream.readAllBytes();
+            ImageData imageData = ImageDataFactory.create(imageBytes);
             Image logo = new Image(imageData).setTextAlignment(TextAlignment.CENTER).scaleToFit(100, 100).setHorizontalAlignment(HorizontalAlignment.CENTER);
             document.add(logo);
         } catch (Exception e) {
@@ -70,24 +73,28 @@ public class ImpressaoService {
         .setTextAlignment(TextAlignment.CENTER)
         .setMarginBottom(10));
         
-        Table table = new Table(UnitValue.createPercentArray(new float[]{40, 40, 20})).useAllAvailableWidth();
+        Table table = new Table(UnitValue.createPercentArray(new float[]{35, 35, 20, 10})).useAllAvailableWidth();
 
         Cell produto = new Cell().add(new Paragraph("Produto")).setBorder(Border.NO_BORDER);
         Cell observacao = new Cell().add(new Paragraph("Observação")).setBorder(Border.NO_BORDER);
+        Cell tamanho = new Cell().add(new Paragraph("Tamanho")).setBorder(Border.NO_BORDER);
         Cell valor = new Cell().add(new Paragraph("Valor")).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT);
 
         table.addHeaderCell(produto);
         table.addHeaderCell(observacao);
+        table.addHeaderCell(tamanho);
         table.addHeaderCell(valor);
 
         NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
         for(var produtoPedido:pedido.getProdutosPedido()){
             Cell Nomeproduto = new Cell().add(new Paragraph(produtoPedido.getProduto().getNome())).setBorder(Border.NO_BORDER);
             Cell observacaoTxt = new Cell().add(new Paragraph(produtoPedido.getObservacao() == null ? "" : produtoPedido.getObservacao())).setBorder(Border.NO_BORDER);
-            Cell valorProd = new Cell().add(new Paragraph(formatter.format(produtoPedido.getProduto().getValor()))).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT);
+            Cell tamanhoProd = new Cell().add(new Paragraph(produtoPedido.getTamanhoMomentoCompra() == null ? "" : produtoPedido.getTamanhoMomentoCompra())).setBorder(Border.NO_BORDER);
+            Cell valorProd = new Cell().add(new Paragraph(formatter.format(produtoPedido.getValorMomentoCompra()))).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT);
 
             table.addCell(Nomeproduto);
             table.addCell(observacaoTxt);
+            table.addCell(tamanhoProd);
             table.addCell(valorProd);
         }
 
