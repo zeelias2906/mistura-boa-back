@@ -3,6 +3,7 @@ package com.mistura_boa.mistura_boa.services;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -51,7 +52,7 @@ public class PedidoService {
 
         dto.setNumeroPedido( UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE);
         dto.setProdutosPedido(produtosPedido);
-        dto.setDataPedido(LocalDateTime.now());
+        dto.setDataPedido(LocalDateTime.now(ZoneId.of("America/Sao_Paulo")));
         dto.setStatusPedido(StatusPedidoEnum.AGUARDANDO_CONFIRMACAO);
         
         var pedido = this.pedidoRepository.save(modelMapper.map(dto, Pedido.class));
@@ -118,7 +119,7 @@ public class PedidoService {
     public void cancelByRestaurante(CancelarPedidoDTO cancelarDto) throws Exception{
         var pedido = this.pedidoRepository.findById(cancelarDto.getIdPedido()).orElseThrow(() -> new Exception("Pedido não encontrado"));
 
-        pedido.setDataFechamentoPedido(LocalDateTime.now());
+        pedido.setDataFechamentoPedido(LocalDateTime.now(ZoneId.of("America/Sao_Paulo")));
         pedido.setJustificativa(cancelarDto.getJustificativa());
         pedido.setStatusPedido(StatusPedidoEnum.CANCELADO);
 
@@ -130,7 +131,7 @@ public class PedidoService {
         var pedido = this.getById(id);
 
         if(status == StatusPedidoEnum.FINALIZADO){
-            pedido.setDataFechamentoPedido(LocalDateTime.now());
+            pedido.setDataFechamentoPedido(LocalDateTime.now(ZoneId.of("America/Sao_Paulo")));
         }
 
         pedido.setStatusPedido(status);

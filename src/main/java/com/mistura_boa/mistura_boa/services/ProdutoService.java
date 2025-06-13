@@ -2,6 +2,7 @@ package com.mistura_boa.mistura_boa.services;
 
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -81,7 +82,7 @@ public class ProdutoService {
         var produto = this.produtoRepository.findById(id).orElseThrow(() -> new Exception("Produto não encontrado"));
 
         if(produto.getDataExclusao() == null){
-            produto.setDataExclusao(LocalDateTime.now());
+            produto.setDataExclusao(LocalDateTime.now(ZoneId.of("America/Sao_Paulo")));
         }else{
             produto.setDataExclusao(null);
         }

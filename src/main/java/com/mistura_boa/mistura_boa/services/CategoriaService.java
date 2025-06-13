@@ -1,6 +1,7 @@
 package com.mistura_boa.mistura_boa.services;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -84,7 +85,7 @@ public class CategoriaService {
 
         if(categoria.getDataExclusao() == null){
             validateCategoriaByProduto(categoria.getId());
-            categoria.setDataExclusao(LocalDateTime.now());
+            categoria.setDataExclusao(LocalDateTime.now(ZoneId.of("America/Sao_Paulo")));
         }else{
             categoria.setDataExclusao(null);
         }
