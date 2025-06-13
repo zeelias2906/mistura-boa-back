@@ -87,7 +87,7 @@ public class ImpressaoService {
 
         NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
         for(var produtoPedido:pedido.getProdutosPedido()){
-            Cell Nomeproduto = new Cell().add(new Paragraph(produtoPedido.getProduto().getNome())).setBorder(Border.NO_BORDER);
+            Cell Nomeproduto = new Cell().add(new Paragraph(produtoPedido.getProduto().getCategoria().getNome() + " " + produtoPedido.getProduto().getNome())).setBorder(Border.NO_BORDER);
             Cell observacaoTxt = new Cell().add(new Paragraph(produtoPedido.getObservacao() == null ? "" : produtoPedido.getObservacao())).setBorder(Border.NO_BORDER);
             Cell tamanhoProd = new Cell().add(new Paragraph(produtoPedido.getTamanhoMomentoCompra() == null ? "" : produtoPedido.getTamanhoMomentoCompra())).setBorder(Border.NO_BORDER);
             Cell valorProd = new Cell().add(new Paragraph(formatter.format(produtoPedido.getValorMomentoCompra()))).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT);
