@@ -1,6 +1,7 @@
 package com.mistura_boa.mistura_boa.services;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +59,7 @@ public class EnderecoService {
     public void delete(Long IdEndereco) throws Exception{
         var endereco = this.enderecoRepository.findById(IdEndereco).orElseThrow(() -> new Exception("Endereco não encontrado"));
 
-        endereco.setDataExclusao(LocalDateTime.now());
+        endereco.setDataExclusao(LocalDateTime.now(ZoneId.of("America/Sao_Paulo")));
         this.enderecoRepository.save(endereco);
     }
 
