@@ -17,7 +17,7 @@ public interface IPedidoRepository extends JpaRepository<Pedido, Long> {
     @Query("Select p from Pedido p where p.usuario.id = :idUsuario order by p.dataPedido desc")
     Page<Pedido> findByIdUsuario(@Param("idUsuario") Long idUsuario, Pageable pageable);
 
-    @Query("Select p from Pedido p where p.dataPedido between :startOfDay and :endOfDay and p.statusPedido = :status order by p.dataPedido asc")
+    @Query("Select p from Pedido p where p.dataPedido between :startOfDay and :endOfDay and p.statusPedido = :status order by p.dataPedido desc")
     List<Pedido> findAllTodayByStatus(@Param("startOfDay")LocalDateTime startOfDay, @Param("endOfDay")LocalDateTime endOfDay, @Param("status") StatusPedidoEnum status);
 
 }
