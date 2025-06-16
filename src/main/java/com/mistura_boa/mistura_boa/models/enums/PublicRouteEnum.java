@@ -11,6 +11,7 @@ public enum PublicRouteEnum {
     RESET_SENHA("/auth/reset-password", "POST"),
     NOVO_USUARIO("/auth/new-user", "POST"),
     GET_PRODUTO_BY_ID("/produto/{id}", "GET"),
+    GET_PRODUTO_BY_ID_ACTIVES("/produto/actives/{id}", "GET"),
     GET_CATEGORIA_FOR_GRID("/categoria/grid", "GET"),
     SEARCH_PRODUTO_ACTIVE("/produto/search-active", "POST"),
     SEARCH_GRID("/produto/search-grid", "POST");
