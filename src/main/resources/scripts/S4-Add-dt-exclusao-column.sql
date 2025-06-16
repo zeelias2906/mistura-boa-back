@@ -1,0 +1,1 @@
+alter table tamanho_preco add column dt_exclusao timestamp;

@@ -1,6 +1,8 @@
 package com.mistura_boa.mistura_boa.models.dtos;
 
 
+import java.time.LocalDateTime;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -19,5 +21,6 @@ public class TamanhoPrecoDTO {
     private String tamanho;
     @NotNull(message = "Valor não pode ser vazio")
     private Float valor;
+    private LocalDateTime dataExclusao;
     
 }
