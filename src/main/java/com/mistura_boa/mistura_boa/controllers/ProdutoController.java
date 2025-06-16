@@ -45,6 +45,15 @@ public class ProdutoController {
 		}
 	}
 
+	@GetMapping("/actives/{id}")
+	public ResponseEntity<?> getByIdActives(@PathVariable("id") Long id) throws Exception {
+		try {
+            return ResponseEntity.ok(produtoService.getByIdActives(id));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
+		}
+	}
+
 	@GetMapping("/")
     @PreAuthorize("hasRole('GERENTE')")
 	public ResponseEntity<?> getAll() throws Exception {

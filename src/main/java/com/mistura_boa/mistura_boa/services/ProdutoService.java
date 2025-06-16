@@ -73,6 +73,12 @@ public class ProdutoService {
         return modelMapper.map(produto, ProdutoDTO.class);
     }
 
+    public ProdutoDTO getByIdActives(Long id) throws Exception{
+        var produto = this.produtoRepository.findById(id).orElseThrow(() -> new Exception("Produto não encontrado"));
+        produto.setTamanhoPrecos(produto.getTamanhoPrecos().stream().filter(tp -> tp.getDataExclusao() == null).toList());
+        return modelMapper.map(produto, ProdutoDTO.class);
+    }
+
     public List<ProdutoDTO> getAll() throws Exception{
         var produtos = this.produtoRepository.findAll();
         return produtos.stream().map(produto -> modelMapper.map(produto, ProdutoDTO.class)).toList();
@@ -148,7 +154,7 @@ public class ProdutoService {
     }
 
     private void findMenorValor(Produto produto){
-        Optional<Float> menorValor = produto.getTamanhoPrecos().stream().map(TamanhoPreco::getValor).filter(Objects::nonNull).min(Comparator.naturalOrder());
+        Optional<Float> menorValor = produto.getTamanhoPrecos().stream().filter(tp -> tp.getDataExclusao() == null ).map(TamanhoPreco::getValor).filter(Objects::nonNull).min(Comparator.naturalOrder());
 
         menorValor.ifPresent(produto::setMenorValor);
     

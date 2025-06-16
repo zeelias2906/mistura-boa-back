@@ -1,5 +1,7 @@
 package com.mistura_boa.mistura_boa.models.entities;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -32,6 +34,9 @@ public class TamanhoPreco {
 
     @Column(name = "VALOR")
     private Float valor;
+
+    @Column(name = "DT_EXCLUSAO")
+    private LocalDateTime dataExclusao;
 
     @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_PRODUTO", nullable = false)

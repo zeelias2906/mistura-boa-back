@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.geom.PageSize;
+import com.itextpdf.kernel.geom.Rectangle;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
@@ -23,6 +25,7 @@ import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.element.Text;
 import com.itextpdf.layout.properties.HorizontalAlignment;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
@@ -41,8 +44,12 @@ public class ImpressaoService {
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         PdfWriter writer = new PdfWriter(out);
+        PageSize cupomSize = new PageSize(new Rectangle(226.77f, 3000f));
         PdfDocument pdf = new PdfDocument(writer);
-        Document document = new Document(pdf);
+        Document document = new Document(pdf, cupomSize);
+        document.setFontSize(12);
+
+        
 
         try {
             InputStream logoStream = getClass().getResourceAsStream("/imgs/logo.jpg");
@@ -55,55 +62,59 @@ public class ImpressaoService {
         }
 
         document.add(new Paragraph("Pedido")
-            .setFontSize(18)
-            .setBold()
-            .setTextAlignment(TextAlignment.CENTER)
-            .setMarginBottom(10));
+                .setFontSize(20) // maior
+                .setBold()
+                .setTextAlignment(TextAlignment.CENTER)
+                .setMarginBottom(10));
 
         document.add(new Paragraph("Número: " + pedido.getNumeroPedido().toString()).setMarginBottom(5));
-        document.add(new Paragraph("Cliente: " + pedido.getUsuario().getPessoa().getNome()).setMarginBottom(5));
+        document.add(new Paragraph("Cliente: " + pedido.getUsuario().getPessoa().getNome()).setFontSize(12).setMarginBottom(5));
         LocalDateTime dataPedido = pedido.getDataPedido();
         String dataFormatada = dataPedido.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
         document.add(new Paragraph("Data: " + dataFormatada).setMarginBottom(10));
 
 
         document.add(new Paragraph("Produtos")
-        .setFontSize(18)
+        .setFontSize(16)
         .setBold()
         .setTextAlignment(TextAlignment.CENTER)
         .setMarginBottom(10));
         
-        Table table = new Table(UnitValue.createPercentArray(new float[]{35, 35, 20, 10})).useAllAvailableWidth();
+        Table table = new Table(UnitValue.createPercentArray(new float[]{60, 30, 10})).useAllAvailableWidth();
 
         Cell produto = new Cell().add(new Paragraph("Produto")).setBorder(Border.NO_BORDER);
-        Cell observacao = new Cell().add(new Paragraph("Observação")).setBorder(Border.NO_BORDER);
         Cell tamanho = new Cell().add(new Paragraph("Tamanho")).setBorder(Border.NO_BORDER);
         Cell valor = new Cell().add(new Paragraph("Valor")).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT);
 
         table.addHeaderCell(produto);
-        table.addHeaderCell(observacao);
         table.addHeaderCell(tamanho);
         table.addHeaderCell(valor);
 
         NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
         for(var produtoPedido:pedido.getProdutosPedido()){
             Cell Nomeproduto = new Cell().add(new Paragraph(produtoPedido.getProduto().getCategoria().getNome() + " " + produtoPedido.getProduto().getNome())).setBorder(Border.NO_BORDER);
-            Cell observacaoTxt = new Cell().add(new Paragraph(produtoPedido.getObservacao() == null ? "" : produtoPedido.getObservacao())).setBorder(Border.NO_BORDER);
             Cell tamanhoProd = new Cell().add(new Paragraph(produtoPedido.getTamanhoMomentoCompra() == null ? "" : produtoPedido.getTamanhoMomentoCompra())).setBorder(Border.NO_BORDER);
             Cell valorProd = new Cell().add(new Paragraph(formatter.format(produtoPedido.getValorMomentoCompra()))).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT);
-
+            
             table.addCell(Nomeproduto);
-            table.addCell(observacaoTxt);
             table.addCell(tamanhoProd);
             table.addCell(valorProd);
+
+            if(produtoPedido.getObservacao() != null){
+                Text label = new Text("Obs: ").setBold();
+                Text texto = new Text(produtoPedido.getObservacao());
+                Cell observacao = new Cell(1,3).add(new Paragraph().add(label).add(texto).setFontSize(10)).setBorder(Border.NO_BORDER);
+                table.addCell(observacao);
+            }
+
         }
 
         document.add(table);
         
-        document.add(new Paragraph("TOTAL: " + formatter.format(pedido.getValor())).setBold().setTextAlignment(TextAlignment.RIGHT).setMarginTop(20));
+        document.add(new Paragraph("TOTAL: " + formatter.format(pedido.getValor())).setFontSize(14).setBold().setTextAlignment(TextAlignment.RIGHT).setMarginTop(20));
 
         document.add(new Paragraph("Forma de pagamento")
-        .setFontSize(18)
+        .setFontSize(16)
         .setBold()
         .setTextAlignment(TextAlignment.CENTER)
         .setMarginBottom(10));
@@ -119,7 +130,7 @@ public class ImpressaoService {
         }
 
         document.add(new Paragraph("Entrega")
-        .setFontSize(18)
+        .setFontSize(16)
         .setBold()
         .setTextAlignment(TextAlignment.CENTER)
         .setMarginBottom(10));
