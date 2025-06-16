@@ -44,10 +44,10 @@ public class ImpressaoService {
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         PdfWriter writer = new PdfWriter(out);
-        PageSize cupomSize = new PageSize(new Rectangle(226.77f, 3000f));
+        PageSize cupomSize = new PageSize(new Rectangle(204.09f, 3000f));
         PdfDocument pdf = new PdfDocument(writer);
         Document document = new Document(pdf, cupomSize);
-        document.setFontSize(12);
+        document.setFontSize(10);
 
         
 
