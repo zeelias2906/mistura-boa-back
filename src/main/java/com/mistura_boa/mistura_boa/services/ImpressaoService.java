@@ -44,10 +44,10 @@ public class ImpressaoService {
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         PdfWriter writer = new PdfWriter(out);
-        PageSize cupomSize = new PageSize(new Rectangle(204.09f, 3000f));
+        PageSize cupomSize = new PageSize(new Rectangle(225.09f, 3000f));
         PdfDocument pdf = new PdfDocument(writer);
         Document document = new Document(pdf, cupomSize);
-        document.setFontSize(10);
+        document.setFontSize(8);
 
         
 
@@ -62,23 +62,23 @@ public class ImpressaoService {
         }
 
         document.add(new Paragraph("Pedido")
-                .setFontSize(20) // maior
+                .setFontSize(12) // maior
                 .setBold()
                 .setTextAlignment(TextAlignment.CENTER)
-                .setMarginBottom(10));
+                .setMarginBottom(8));
 
         document.add(new Paragraph("Número: " + pedido.getNumeroPedido().toString()).setMarginBottom(5));
-        document.add(new Paragraph("Cliente: " + pedido.getUsuario().getPessoa().getNome()).setFontSize(12).setMarginBottom(5));
+        document.add(new Paragraph("Cliente: " + pedido.getUsuario().getPessoa().getNome()).setFontSize(8).setMarginBottom(5));
         LocalDateTime dataPedido = pedido.getDataPedido();
         String dataFormatada = dataPedido.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
         document.add(new Paragraph("Data: " + dataFormatada).setMarginBottom(10));
 
 
         document.add(new Paragraph("Produtos")
-        .setFontSize(16)
+        .setFontSize(8)
         .setBold()
         .setTextAlignment(TextAlignment.CENTER)
-        .setMarginBottom(10));
+        .setMarginBottom(8));
         
         Table table = new Table(UnitValue.createPercentArray(new float[]{60, 30, 10})).useAllAvailableWidth();
 
@@ -111,37 +111,37 @@ public class ImpressaoService {
 
         document.add(table);
         
-        document.add(new Paragraph("TOTAL: " + formatter.format(pedido.getValor())).setFontSize(14).setBold().setTextAlignment(TextAlignment.RIGHT).setMarginTop(20));
+        document.add(new Paragraph("TOTAL: " + formatter.format(pedido.getValor())).setFontSize(8).setBold().setTextAlignment(TextAlignment.RIGHT).setMarginTop(10));
 
         document.add(new Paragraph("Forma de pagamento")
-        .setFontSize(16)
+        .setFontSize(8)
         .setBold()
         .setTextAlignment(TextAlignment.CENTER)
-        .setMarginBottom(10));
+        .setMarginBottom(8));
 
         document.add(new Paragraph(pedido.getFormaPagamento().getDescricao()).setMarginBottom(1));
 
         if(pedido.getFormaPagamento() == FormaPagamentoEnum.DINHEIRO){
             if(pedido.getPrecisaTroco()){
-                document.add(new Paragraph("Troco para: " + formatter.format(pedido.getValorTroco())).setMarginBottom(10));
+                document.add(new Paragraph("Troco para: " + formatter.format(pedido.getValorTroco())).setMarginBottom(8));
             }else{
-                document.add(new Paragraph("Não precisa de troco").setMarginBottom(10));
+                document.add(new Paragraph("Não precisa de troco").setMarginBottom(8));
             }
         }
 
         document.add(new Paragraph("Entrega")
-        .setFontSize(16)
+        .setFontSize(8)
         .setBold()
         .setTextAlignment(TextAlignment.CENTER)
-        .setMarginBottom(10));
+        .setMarginBottom(8));
 
         if(pedido.getEndereco()==null){
-            document.add(new Paragraph("Pedido será retirado no estabelecimento").setMarginBottom(10));
+            document.add(new Paragraph("Pedido será retirado no estabelecimento").setMarginBottom(8));
         }else{
             var endereco = pedido.getEndereco();
             document.add(new Paragraph("Endereço para entrega: " + endereco.getLogradouro() + " - " +  endereco.getBairro() + ", n° "  + endereco.getNumero()).setMarginBottom(1));
             document.add(new Paragraph("Ponto de referência: " + (endereco.getPontoReferencia()== null ? "Não possui ponto de referência" : endereco.getPontoReferencia())).setMarginBottom(1));
-            document.add(new Paragraph("Telefone para contato: " + pedido.getUsuario().getPessoa().getTelefone()).setMarginBottom(10));
+            document.add(new Paragraph("Telefone para contato: " + pedido.getUsuario().getPessoa().getTelefone()).setMarginBottom(8));
         }
 
         document.close();
